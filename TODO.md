@@ -1,0 +1,11 @@
+- [ ] README.md
+    - [ ] Write a better README
+- [ ] Input
+    - [ ] Allow input from filename
+- [ ] Parser
+    - [ ] Write tests
+- [ ] Formatter
+    - [ ] Create POC for passing configuration
+- [ ] Output
+    - [ ] Forward exit code of test command
+- [ ] How to test `os.Getwd`?

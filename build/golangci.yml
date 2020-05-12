@@ -1,0 +1,8 @@
+run:
+  deadline: 10m
+
+output:
+  format: line-number
+
+linters:
+  enable-all: true
