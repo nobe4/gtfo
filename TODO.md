@@ -1,5 +1,5 @@
-- [ ] README.md
-    - [ ] Write a better README
+- [X] README.md
+    - [X] Write a better README
 - [ ] Input
     - [ ] Allow input from filename
     - [ ] Add flags
