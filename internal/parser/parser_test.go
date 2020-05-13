@@ -146,22 +146,6 @@ func TestFatal2 (t *testing.T) {
 			{Name: "TestFatal2", Line: "9", Output: "error 2"},
 		},
 	},
-
-	{
-		description: "Fatal and fatal 2",
-		testFunc: `
-func TestFatal1 (t *testing.T) {
-	t.Fatal("error 1")
-}
-
-func TestFatal2 (t *testing.T) {
-	t.Fatal("error 2")
-}`,
-		expected: []Test{
-			{Name: "TestFatal1", Line: "6", Output: "error 1"},
-			{Name: "TestFatal2", Line: "9", Output: "error 2"},
-		},
-	},
 }
 
 // createScanner create a bufioScanner from the provided test.
