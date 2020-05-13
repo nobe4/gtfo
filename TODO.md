@@ -2,10 +2,14 @@
     - [ ] Write a better README
 - [ ] Input
     - [ ] Allow input from filename
+    - [ ] Add flags
+        - [ ] `-h` for help
 - [ ] Parser
-    - [ ] Write tests
+    - [x] Write tests
 - [ ] Formatter
     - [ ] Create POC for passing configuration
 - [ ] Output
     - [ ] Forward exit code of test command
+    - [x] Remove extra lines
+    - [ ] Remove extra spaces
 - [ ] How to test `os.Getwd`?

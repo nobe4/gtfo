@@ -7,7 +7,7 @@ GO?=go
 GOOS?=darwin
 GOARCH?=amd64
 
-RELEASE?=0.0.1
+RELEASE?=0.0.2
 COMMIT?=$(shell git rev-parse HEAD)
 BUILD_TIME?=$(shell date -u '+%Y-%m-%d_%H:%M:%S')
 
@@ -22,7 +22,7 @@ version:
 
 .PHONY: bump
 bump:
-	@make -f ./build/makefile bump
+	./build/bump.sh
 
 .PHONY: build
 build:
@@ -39,6 +39,11 @@ run:
 
 .PHONY: test
 test:
+	# Run all the short tests from the host
+	CGO_ENABLED=1 ${GO} test -race -short -cover ./...
+
+.PHONY: test
+gtfo:
 	# Run all the short tests from the host
 	CGO_ENABLED=1 ${GO} test -json -race -short -cover ./... | go run ./cmd/gtfo/gtfo.go
 

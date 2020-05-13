@@ -1,3 +1,4 @@
 .DS_Store
 coverprofile.out
 bin/
+makefile-e
