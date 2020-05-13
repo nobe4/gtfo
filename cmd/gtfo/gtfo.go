@@ -21,7 +21,12 @@ func main() {
 
 	// Parse the log lines.
 	s := bufio.NewScanner(os.Stdin)
-	tests := parser.Parse(s)
+
+	tests, err := parser.Parse(s)
+	if err != nil {
+		log.Fatal(err)
+		os.Exit(1)
+	}
 
 	// Simple printing of the found logs.
 	for _, test := range tests {
