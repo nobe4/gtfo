@@ -2,22 +2,29 @@ package main
 
 import (
 	"bufio"
+	"flag"
 	"fmt"
 	"log"
 	"os"
-	"path/filepath"
-	"strings"
 
+	"github.com/nobe4/gtfo/internal/formatter"
 	"github.com/nobe4/gtfo/internal/module"
 	"github.com/nobe4/gtfo/internal/parser"
 )
 
+const (
+	defaultFormat = `{{.Path}}:{{.Line}}: {{.Output}}\n`
+)
+
 func main() {
-	// Get the current module.
-	module, err := module.Get()
-	if err != nil {
-		log.Fatalf("Couldn't figure out the current module: %v", err)
-	}
+	// Parsing the format
+	formatString := flag.String(
+		"format",
+		defaultFormat,
+		"Format to apply on the logs.\nSee internal/formatter for more info.",
+	)
+
+	flag.Parse()
 
 	// Parse the log lines.
 	s := bufio.NewScanner(os.Stdin)
@@ -25,15 +32,24 @@ func main() {
 	tests, err := parser.Parse(s)
 	if err != nil {
 		log.Fatal(err)
-		os.Exit(1)
+		return
+	}
+
+	// Get the current module, default to an empty string.
+	module, err := module.Get()
+	if err != nil {
+		log.Printf("Couldn't figure out the current module: %v", err)
+	}
+
+	// Create the formatter, using the template and the module.
+	format, err := formatter.Prepare(*formatString, module)
+	if err != nil {
+		log.Fatalf("Couldn't create the formatter: %v", err)
 	}
 
 	// Simple printing of the found logs.
 	for _, test := range tests {
-		// Remove the module from the package
-		modifiedP := strings.TrimPrefix(test.Package, module+"/")
-
-		fmt.Printf("%s:%s: %s\n", filepath.Join(modifiedP, test.File), test.Line, test.Output)
+		fmt.Print(format(test))
 	}
 
 	// If there are any test, exit badly, so the editor can pick it up.

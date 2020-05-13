@@ -6,3 +6,6 @@ output:
 
 linters:
   enable-all: true
+  disable:
+    - funlen
+    - testpackage

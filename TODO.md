@@ -2,12 +2,16 @@
     - [X] Write a better README
 - [ ] Input
     - [ ] Allow input from filename
-    - [ ] Add flags
-        - [ ] `-h` for help
+    - [x] Add flags
+        - [x] `-h` for help
+        - [x] `-format` for input format
+        - [x] Transform flags escape chars to allow newlines/tabs/...
 - [ ] Parser
     - [x] Write tests
-- [ ] Formatter
-    - [ ] Create POC for passing configuration
+- [x] Formatter
+    - [x] Create POC for passing configuration
+    - [x] Write template
+    - [x] Write tests
 - [ ] Output
     - [ ] Forward exit code of test command
     - [x] Remove extra lines

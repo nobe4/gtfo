@@ -75,6 +75,7 @@ type Test struct {
 // Parse read each line from the scanner and create a list of tests that are failing.
 // This function is long because all the logic has to be held for an unknown
 // number of log lines, may refactor later.
+// nolint: gocognit
 func Parse(s *bufio.Scanner) ([]Test, error) {
 	lineNumberRe := regexp.MustCompile(lineNumberReExp)
 
