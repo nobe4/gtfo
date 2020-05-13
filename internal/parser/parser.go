@@ -75,7 +75,7 @@ type Test struct {
 // Parse read each line from the scanner and create a list of tests that are failing.
 // This function is long because all the logic has to be held for an unknown
 // number of log lines, may refactor later.
-func Parse(s *bufio.Scanner) []Test {
+func Parse(s *bufio.Scanner) ([]Test, error) {
 	lineNumberRe := regexp.MustCompile(lineNumberReExp)
 
 	// Need to hold this states in between logs.
@@ -88,7 +88,7 @@ func Parse(s *bufio.Scanner) []Test {
 		// Parse the input line.
 		line := Line{}
 		if err := json.Unmarshal(s.Bytes(), &line); err != nil {
-			panic(err)
+			return nil, err
 		}
 
 		// Switch on action will lead to 1,
@@ -147,15 +147,15 @@ func Parse(s *bufio.Scanner) []Test {
 						// Add new parsed information.
 						File:   matches[1],
 						Line:   matches[2],
-						Output: matches[3] + "\n",
+						Output: matches[3],
 					}
 				} else {
 					// Step 5.
-					test.Output += line.Output
+					test.Output += "\n" + strings.TrimRight(line.Output, "\n")
 				}
 			}
 		}
 	}
 
-	return tests
+	return tests, nil
 }
