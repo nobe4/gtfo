@@ -1,36 +1,39 @@
 /*
 
-Package parser looks at the incoming JSON logs and parse them to extract the
+Package parser extract information from go test JSON output.
+
+It looks at the incoming JSON logs and parse them to extract the
 following information:
-- Test File
-- Test Name
-- Test Line
-- Test Output
+
+	- Test File
+	- Test Name
+	- Test Line
+	- Test Output
 
 So we can build a modular output with the information, for instance:
 
-file:line:output
-
+	file:line:output
 
 During the parsing, we'll have two returned tests for the following case:
 
-func Test (t *testing.T) {
-	t.Log("a")   <- first
-	t.Fatal("b") <- second
-}
+	func Test (t *testing.T) {
+		t.Log("a")   <- first
+		t.Fatal("b") <- second
+	}
 
 Description of JSON logs:
 
-  Step | Action    | Output
-  1    | run       |
-  2    | output    | === RUN
-  3    | output    | --- PASS/FAIL
-  4    | output    | file_test.go:42
-  5    | output    | messages
-  6    | output    | FAIL ...
-  7    | pass/fail |
+	Step | Action    | Output
+	---  | ---       | ---
+	1    | run       |
+	2    | output    | === RUN
+	3    | output    | --- PASS/FAIL
+	4    | output    | file_test.go:42
+	5    | output    | messages
+	6    | output    | FAIL ...
+	7    | pass/fail |
 
-See comments "Step X" below for steps details.
+See comments "Step X" in function Parser for steps details.
 
 */
 package parser

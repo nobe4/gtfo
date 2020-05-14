@@ -14,6 +14,15 @@ import (
 
 const (
 	defaultFormat = `{{.Path}}:{{.Line}}: {{.Output}}\n`
+	usageMessage  = "" +
+		`Usage of %[1]s:
+
+  go test -json ./... | %[1]s [flags]
+
+Flags:
+  -h bool
+  	print this help
+`
 )
 
 func main() {
@@ -23,6 +32,11 @@ func main() {
 		defaultFormat,
 		"Format to apply on the logs.\nSee internal/formatter for more info.",
 	)
+
+	flag.Usage = func() {
+		fmt.Fprintf(os.Stderr, usageMessage, os.Args[0])
+		flag.PrintDefaults()
+	}
 
 	flag.Parse()
 

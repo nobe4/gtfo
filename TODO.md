@@ -2,6 +2,7 @@
     - [X] Write a better README
 - [ ] Input
     - [ ] Allow input from filename
+    - [ ] Timeout for input to recieve something.
     - [x] Add flags
         - [x] `-h` for help
         - [x] `-format` for input format
@@ -17,3 +18,5 @@
     - [x] Remove extra lines
     - [ ] Remove extra spaces
 - [ ] How to test `os.Getwd`?
+- [ ] Examples
+- [ ] Benchmark
