@@ -69,136 +69,167 @@ func TestCases(t *testing.T) {
 		{
 			description: "One empty log",
 			testFunc: `
-func Test (t *testing.T) {
-	t.Log("")
-}`,
+			func Test (t *testing.T) {
+				t.Log("")
+			}`,
 			expected: []Test{},
 		},
 
 		{
 			description: "One log",
 			testFunc: `
-func Test (t *testing.T) {
-	t.Log("something")
-}`,
+			func Test (t *testing.T) {
+				t.Log("something")
+			}`,
 			expected: []Test{},
 		},
 
 		{
 			description: "Two logs",
 			testFunc: `
-func Test (t *testing.T) {
-	t.Log("something")
-	t.Log("something else")
-}`,
+			func Test (t *testing.T) {
+				t.Log("something")
+				t.Log("something else")
+			}`,
 			expected: []Test{},
 		},
 
 		{
 			description: "Multiline log",
 			testFunc: `
-func Test (t *testing.T) {
-	t.Log("something\non\nfour\nlines")
-}`,
+			func Test (t *testing.T) {
+				t.Log("something\non\nfour\nlines")
+			}`,
 			expected: []Test{},
 		},
 
 		{
 			description: "One empty fatal",
 			testFunc: `
-func Test (t *testing.T) {
-	t.Fatal("")
-}`,
-			expected: []Test{{Name: "Test", Line: "5", Output: ""}},
+			func Test (t *testing.T) {
+				t.Fatal("")
+			}`,
+			expected: []Test{
+				{
+					Name:   "Test",
+					Lines:  []Line{{Number: "5", Output: ""}},
+					Output: "",
+				},
+			},
 		},
 
 		{
 			description: "One fatal",
 			testFunc: `
-func Test (t *testing.T) {
-	t.Fatal("error")
-}`,
-			expected: []Test{{Name: "Test", Line: "5", Output: "error"}},
+			func Test (t *testing.T) {
+				t.Fatal("error")
+			}`,
+			expected: []Test{
+				{
+					Name:   "Test",
+					Lines:  []Line{{Number: "5", Output: "error"}},
+					Output: "",
+				},
+			},
 		},
 
 		{
 			description: "Two fatals",
 			testFunc: `
-func Test (t *testing.T) {
-	t.Fatal("error")
-	t.Fatal("again")
-}`,
-			expected: []Test{{Name: "Test", Line: "5", Output: "error"}},
+			func Test (t *testing.T) {
+				t.Fatal("error")
+				t.Fatal("again")
+			}`,
+			expected: []Test{
+				{
+					Name:   "Test",
+					Lines:  []Line{{Number: "5", Output: "error"}},
+					Output: "",
+				},
+			},
 		},
 
 		{
 			description: "Multiline fatal",
 			testFunc: `
-func Test (t *testing.T) {
-	t.Fatal("error\non\nfour\nlines")
-}`,
-			expected: []Test{{Name: "Test", Line: "5", Output: "error\n        on\n        four\n        lines"}},
-		},
-
-		{
-			description: "Log then fatal",
-			testFunc: `
-func Test (t *testing.T) {
-	t.Log("ok")
-	t.Fatal("error")
-}`,
+			func Test (t *testing.T) {
+				t.Fatal("error\non\nfour\nlines")
+			}`,
 			expected: []Test{
-				{Name: "Test", Line: "5", Output: "ok"},
-				{Name: "Test", Line: "6", Output: "error"},
+				{
+					Name:   "Test",
+					Lines:  []Line{{Number: "5", Output: "error"}},
+					Output: "\n        on\n        four\n        lines",
+				},
 			},
 		},
 
-		{
-			description: "Log and fatal",
-			testFunc: `
-func TestLog (t *testing.T) {
-	t.Log("ok")
-}
+		// {
+		// // Any log printed before a failed test will be printed.
+		// description: "Log then fatal",
+		// testFunc: `
+		// func Test (t *testing.T) {
+		// t.Log("ok")
+		// t.Fatal("error")
+		// }`,
+		// expected: []Test{
+		// {Name: "Test", Line: "5", Output: "ok"},
+		// {Name: "Test", Line: "6", Output: "error"},
+		// },
+		// },
 
-func TestFatal (t *testing.T) {
-	t.Fatal("error")
-}`,
-			expected: []Test{
-				{Name: "TestFatal", Line: "9", Output: "error"},
-			},
-		},
+		// {
+		// description: "Log and fatal",
+		// testFunc: `
+		// func TestLog (t *testing.T) {
+		// t.Log("ok")
+		// }
 
-		{
-			description: "Fatal and fatal",
-			testFunc: `
-func TestFatal1 (t *testing.T) {
-	t.Fatal("error 1")
-}
+		// func TestFatal (t *testing.T) {
+		// t.Fatal("error")
+		// }`,
+		// expected: []Test{
+		// {Name: "TestFatal", Line: "9", Output: "error"},
+		// },
+		// },
 
-func TestFatal2 (t *testing.T) {
-	t.Fatal("error 2")
-}`,
-			expected: []Test{
-				{Name: "TestFatal1", Line: "5", Output: "error 1"},
-				{Name: "TestFatal2", Line: "9", Output: "error 2"},
-			},
-		},
+		// {
+		// description: "Fatal and fatal",
+		// testFunc: `
+		// func TestFatal1 (t *testing.T) {
+		// t.Fatal("error 1")
+		// }
+
+		// func TestFatal2 (t *testing.T) {
+		// t.Fatal("error 2")
+		// }`,
+		// expected: []Test{
+		// {Name: "TestFatal1", Line: "5", Output: "error 1"},
+		// {Name: "TestFatal2", Line: "9", Output: "error 2"},
+		// },
+		// },
 	}
 	for _, tc := range testCases {
-		t.Log(tc.description)
-		s, filename := createScanner(t, tc.testFunc)
-		tests, err := Parse(s)
+		t.Run(tc.description, func(t *testing.T) {
+			s, filename := createScanner(t, tc.testFunc)
+			tests, err := Parse(s)
 
-		assert.NoError(t, err)
+			assert.NoError(t, err, "parsing successful")
 
-		assert.Equal(t, len(tc.expected), len(tests))
+			assert.Equal(t, len(tc.expected), len(tests), "test count")
+			t.Log(tests)
 
-		for i := 0; i < len(tc.expected); i++ {
-			assert.Equal(t, tc.expected[i].Line, tests[i].Line)
-			assert.Equal(t, tc.expected[i].Output, tests[i].Output)
-			assert.Equal(t, filename, tests[i].File)
-			assert.Equal(t, pkg, tests[i].Package)
-		}
+			for i := 0; i < len(tc.expected); i++ {
+				assert.Equal(t, tc.expected[i].Output, tests[i].Output, "output")
+				assert.Equal(t, filename, tests[i].File, "filename")
+				assert.Equal(t, pkg, tests[i].Package, "package")
+
+				for j, line := range tests[i].Lines {
+					assert.Equal(t, tc.expected[i].Lines[j].Number, line.Number, "line number")
+					assert.Equal(t, tc.expected[i].Lines[j].Output, line.Output, "line number")
+				}
+			}
+		})
 	}
 }
 

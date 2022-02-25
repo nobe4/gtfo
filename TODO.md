@@ -17,6 +17,9 @@
     - [ ] Forward exit code of test command
     - [x] Remove extra lines
     - [ ] Remove extra spaces
+- [ ] Split parser test into:
+    1. JSON generation
+    2. JSON parsing
 - [ ] How to test `os.Getwd`?
 - [ ] Examples
 - [ ] Benchmark
